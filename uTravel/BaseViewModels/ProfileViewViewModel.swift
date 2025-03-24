@@ -13,7 +13,7 @@ import SwiftUI
  class ProfileViewViewModel: ObservableObject {
     @Published var user: User? = nil
     @Published var isLoggedOut = false
-    
+  
      
     private let db: Firestore
     
@@ -28,7 +28,8 @@ import SwiftUI
         }
          print("Fetching document for userId: \(userId)")
          
-        db.collection("users").document(userId).getDocument { [weak self] snapshot, error in
+         let db = Firestore.firestore()
+         db.collection("Users").document(userId).getDocument { [weak self] snapshot, error in
             if let error = error {
                 print("Error fetching user document: \(error.localizedDescription)")
                 return

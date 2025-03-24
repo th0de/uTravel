@@ -4,7 +4,7 @@
 //
 //  Created by James Flair on 12/23/24.
 //
-
+import SwiftUI
 import FirebaseAuth
 import Foundation
 
@@ -12,7 +12,7 @@ class LoginViewViewModel: ObservableObject {
     @Published var email = ""
     @Published var password = ""
     @Published var errorMessage = ""
-
+    @Published var navigationPath = NavigationPath()
     
     init () {}
     

@@ -22,6 +22,8 @@ struct NewItemView: View {
                 // Name
                 TextField("Title", text: $viewModel.title)
                     .textFieldStyle(DefaultTextFieldStyle())
+                    .disableAutocorrection(true)
+                
                 
                 //Due Date
                 DatePicker("Due Date", selection: $viewModel.dueDate)
