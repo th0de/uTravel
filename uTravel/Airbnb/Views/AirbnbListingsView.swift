@@ -10,7 +10,7 @@ import SwiftUI
 struct AirbnbListingsVeiw: View {
     @StateObject var viewModel = AirbnbListingsViewViewModel()
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack{
                 if viewModel.listings.isEmpty{
                     ProgressView()

@@ -10,55 +10,85 @@ import Foundation
 
 struct ChatListView: View {
     @StateObject var viewModel = ChatListViewModel()
+    @EnvironmentObject var appState : MainViewViewModel
     
     var body: some View {
-        Group {
-            switch viewModel.loadingState {
-            case .loading, .none:
-                Text("Loading Chats...")
-            case .noResults:
-                Text("No Results Found")
-            case .resultFound:
-                List {
-                    ForEach(viewModel.chats) { chat in
-                        NavigationLink(value: chat.id) {
-                            VStack(alignment: .leading) {
-                                HStack {
-                                    Text( chat.topic ?? "")
-                                        .font(.headline)
-                                    Spacer()
-                                    Text(chat.model?.rawValue ?? "")
-                                        .font(.caption2)
-                                        .fontWeight(.semibold)
-                                        .foregroundStyle(chat.model?.tintColor ?? .black)
-                                        .padding(6)
-                                        .clipShape(Capsule(style: .continuous))
+        NavigationStack {
+            Group {
+                switch viewModel.loadingState {
+                case .loading, .none:
+                    Text("Loading Chats...")
+                case .noResults:
+                    Text("No Results Found")
+                case .resultFound:
+                    List {
+                        ForEach(viewModel.chats) { chat in
+                            NavigationLink(value: chat.id) {
+                                VStack(alignment: .leading) {
+                                    HStack {
+                                        Text( chat.topic ?? "")
+                                            .font(.headline)
+                                        Spacer()
+                                        Text(chat.model?.rawValue ?? "")
+                                            .font(.caption2)
+                                            .fontWeight(.semibold)
+                                            .foregroundStyle(chat.model?.tintColor ?? .black)
+                                            .padding(6)
+                                            .clipShape(Capsule(style: .continuous))
+                                    }
+                                    Text(chat.lastMessageTimeAgo)
+                                }    .font(.caption)
+                            }
+                            .swipeActions {
+                                Button(role: .destructive) {
+                                    viewModel.deleteChat(chat: chat)
+                                } label: {
+                                    Label("Delete", systemImage: "trash.fill")
                                 }
-                                Text(chat.lastMessageTimeAgo)
-                            }    .font(.caption)
+                            }
                         }
                     }
                 }
             }
-        }
-        .navigationTitle("Chats")
-        .toolbar(content: {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button {
-                    //TODO
-                } label: {
-                    Image(systemName: "person")
+            .navigationTitle("Chats")
+            .toolbar(content: {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        viewModel.showProfile()
+                    } label: {
+                        Image(systemName: "person")
+                    }
                 }
+                ToolbarItem(placement: .navigationBarTrailing){
+                    Button {
+                        Task{
+                            do {
+                                let chatID = try await  viewModel.createChat(user:appState.currentUserId)
+                                appState.navigationPath.append(chatID)
+                            } catch {
+                                print(error)
+                            }
+                            
+                        }
+                    } label: {
+                        Image(systemName: "square.and.pencil")
+                    }
+                }
+            })
+            .sheet(isPresented: $viewModel.isShowingProfileView) {
+                ProfileView()
             }
-        })
-        .onAppear {
-            if viewModel.loadingState == .none {
-                viewModel.fetchData()
+            .navigationDestination(for: String.self, destination: { chatId in
+                ChatView(viewModel: .init(chatId: chatId))
+            })
+            .onAppear {
+                if viewModel.loadingState == .none {
+                    viewModel.fetchData(user: appState.currentUserId)
+                }
             }
         }
     }
 }
-    
     
     struct ChatListView_Previews: PreviewProvider{
         static var previews: some View{

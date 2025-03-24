@@ -13,6 +13,7 @@
 		F87D26842D77ACD800CE746F /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = F87D26832D77ACD800CE746F /* FirebaseDatabase */; };
 		F87D26862D77ACD800CE746F /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = F87D26852D77ACD800CE746F /* FirebaseFirestore */; };
 		F87D26882D77ACD800CE746F /* FirebaseFirestoreCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = F87D26872D77ACD800CE746F /* FirebaseFirestoreCombine-Community */; };
+		F89E4A322D86135C008C31FD /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = F89E4A312D86135C008C31FD /* OpenAI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +37,7 @@
 				F87D26822D77ACD800CE746F /* FirebaseCore in Frameworks */,
 				F87D26842D77ACD800CE746F /* FirebaseDatabase in Frameworks */,
 				F87D26882D77ACD800CE746F /* FirebaseFirestoreCombine-Community in Frameworks */,
+				F89E4A322D86135C008C31FD /* OpenAI in Frameworks */,
 				F87D26862D77ACD800CE746F /* FirebaseFirestore in Frameworks */,
 				F87D26802D77ACD800CE746F /* FirebaseAuthCombine-Community in Frameworks */,
 			);
@@ -86,6 +88,7 @@
 				F87D26832D77ACD800CE746F /* FirebaseDatabase */,
 				F87D26852D77ACD800CE746F /* FirebaseFirestore */,
 				F87D26872D77ACD800CE746F /* FirebaseFirestoreCombine-Community */,
+				F89E4A312D86135C008C31FD /* OpenAI */,
 			);
 			productName = uTravel;
 			productReference = F87D261B2D77A9D700CE746F /* uTravel.app */;
@@ -117,6 +120,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				F87D267C2D77ACD800CE746F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				F89E4A302D86135C008C31FD /* XCRemoteSwiftPackageReference "OpenAI" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = F87D261C2D77A9D700CE746F /* Products */;
@@ -358,6 +362,14 @@
 				minimumVersion = 11.9.0;
 			};
 		};
+		F89E4A302D86135C008C31FD /* XCRemoteSwiftPackageReference "OpenAI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/MacPaw/OpenAI";
+			requirement = {
+				kind = exactVersion;
+				version = 0.2.3;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -390,6 +402,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = F87D267C2D77ACD800CE746F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = "FirebaseFirestoreCombine-Community";
+		};
+		F89E4A312D86135C008C31FD /* OpenAI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F89E4A302D86135C008C31FD /* XCRemoteSwiftPackageReference "OpenAI" */;
+			productName = OpenAI;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

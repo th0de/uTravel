@@ -10,9 +10,9 @@ import FirebaseFirestore
 import FirebaseFirestoreCombineSwift
 import Foundation
 
-///View Model for list of items view
-///Primarytab
+
 class ToDoListViewViewModel: ObservableObject {
+    @StateObject var viewModel = ProfileViewViewModel()
     @Published var showingNewItemView = false
     
     private let userId: String
@@ -21,12 +21,11 @@ class ToDoListViewViewModel: ObservableObject {
         self.userId = userId
     }
     
-    /// Delete to do list item
-    /// - Parameter id: item id to delete
+    
     func delete(id: String){
         let db = Firestore.firestore()
         
-        db.collection("users")
+        db.collection("Users")
             .document(userId)
             .collection("todos")
             .document(id)

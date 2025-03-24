@@ -16,10 +16,14 @@ final class AirbnbListingsViewViewModel: ObservableObject {
         service.getListings { [weak self] result in
             switch result {
             case .success(let models):
-                self?.listings = models
-            case.failure:
-                break
+                DispatchQueue.main.async {
+                    
+                    self?.listings = models
+                }
+                case.failure:
+                    break
+                }
             }
         }
     }
-}
+

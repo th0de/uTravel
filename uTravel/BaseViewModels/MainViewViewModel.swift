@@ -8,9 +8,11 @@ import FirebaseAuth
 import Foundation
 import FirebaseAuth
 import Firebase
+import SwiftUI
 
 class MainViewViewModel: ObservableObject {
     @Published var currentUserId: String = ""
+    @Published var navigationPath = NavigationPath()
     
     private var handler: AuthStateDidChangeListenerHandle?
     
