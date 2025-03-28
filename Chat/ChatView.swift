@@ -104,7 +104,8 @@ struct ChatView: View {
         Task {
             do {
                 try await viewModel.sendMessage()
-            } catch  {
+                
+            } catch {
                 print(error)
             }
         }
