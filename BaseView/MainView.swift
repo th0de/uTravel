@@ -36,7 +36,7 @@ struct MainView: View {
                     Label("AirBnB", systemImage: "house.lodge.fill")
                 }
             
-            ChatListView(userId: viewModel.currentUserId)
+            ChatListView()
                 .environmentObject(viewModel)
                 .tabItem {
                     Label("ChatGPT", systemImage: "cpu")
