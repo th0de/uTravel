@@ -22,12 +22,10 @@ class NewItemViewViewModel: ObservableObject {
             return
         }
         
-        // Get current user id
-        guard let uId = Auth.auth().currentUser?.uid else {
+        guard let userId = Auth.auth().currentUser?.uid else {
             return
         }
         
-        // Create Model
         let newId = UUID().uuidString
         let newItem = ToDoListItem(
             id: newId,
@@ -37,16 +35,15 @@ class NewItemViewViewModel: ObservableObject {
             isDone: false
         )
         
-        // Save Model
         let db = Firestore.firestore()
         db.collection("Users")
-            .document(uId)
+            .document(userId)
             .collection("todos")
             .document(newId)
             .setData(newItem.asDictionary()) { error in
                 if let error = error {
                     print("Error saving document: \(error.localizedDescription)")
-                    self.showAlert = true // Show alert for error
+                    self.showAlert = true
                 } else {
                     print("Document successfully saved.")
                 }
