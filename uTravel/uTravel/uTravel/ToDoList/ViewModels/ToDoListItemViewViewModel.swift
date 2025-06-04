@@ -17,14 +17,14 @@ class ToDoListItemViewViewModel: ObservableObject {
         var itemCopy = item
         itemCopy.setDone(!item.isDone)
         
-        guard let uId = Auth.auth().currentUser?.uid else {
+        guard let userId = Auth.auth().currentUser?.uid else {
             return
         }
         
         
         let db = Firestore.firestore()
         db.collection("Users")
-            .document(uId)
+            .document(userId)
             .collection("todos")
             .document(itemCopy.id)
             .setData(itemCopy.asDictionary(), completion: nil)
