@@ -7,10 +7,22 @@
 
 import SwiftUI
 import Foundation
+import FirebaseFirestore
 
 struct ChatListView: View {
-    @StateObject var viewModel = ChatListViewModel()
+    @StateObject var viewModel = ChatListViewModel(userId: "")
     @EnvironmentObject var appState : MainViewViewModel
+    @FirestoreQuery var items: [AppChat]
+   private let userId: String = ""
+    
+    init(userId: String) {
+        self._items = FirestoreQuery(
+            collectionPath: "Users/\(userId)/Chats"
+        )
+        self._viewModel = StateObject(wrappedValue:ChatListViewModel(userId: userId)
+        )
+    }
+    
     
     var body: some View {
         NavigationStack {
@@ -63,8 +75,8 @@ struct ChatListView: View {
                     Button {
                         Task{
                             do {
-                                let chatID = try await  viewModel.createChat(user:appState.currentUserId)
-                                appState.navigationPath.append(chatID)
+                                let chatId = try await  viewModel.createChat(userId:appState.currentUserId)
+                                appState.navigationPath.append(chatId)
                             } catch {
                                 print(error)
                             }
@@ -83,7 +95,7 @@ struct ChatListView: View {
             })
             .onAppear {
                 if viewModel.loadingState == .none {
-                    viewModel.fetchData(user: appState.currentUserId)
+                    viewModel.fetchData(userId: appState.currentUserId)
                 }
             }
         }
@@ -92,7 +104,7 @@ struct ChatListView: View {
     
     struct ChatListView_Previews: PreviewProvider{
         static var previews: some View{
-            ChatListView()
+            ChatListView(userId: "")
         }
     }
 

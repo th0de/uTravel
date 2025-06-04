@@ -7,27 +7,50 @@
  
 import Foundation
 import SwiftUI
+import FirebaseAuth
 import FirebaseFirestore
 import FirebaseFirestoreCombineSwift
 import OpenAI
 
 class ChatListViewModel: ObservableObject {
+    @DocumentID var id: String?
     @Published var chats: [AppChat] = []
+    @FirestoreQuery var items: [AppChat]
     @Published var loadingState: ChatListState = .none
     @Published var isShowingProfileView = false
+    @StateObject var viewModel: ToDoListViewViewModel
+    private let userId: String
     
-    private let db =  Firestore.firestore()
     
-    func fetchData(user: String?) {
-        self.chats = [
-            AppChat(id: "", topic: "Some Topic", model: .gpt3_5_turbo, lastMessageSent: FirestoreDate(), owner: "123"),
-            AppChat(id: "", topic: "Some other Topic", model: .gpt4, lastMessageSent: FirestoreDate(), owner: "123")
-        ]
-        self.loadingState = .resultFound
+    let db =  Firestore.firestore()
+    
+    
+    init(userId: String) {
+        
+            self._items = FirestoreQuery(
+                collectionPath: "Users/\(userId)/Chats"
+            )
+            self._viewModel = StateObject(wrappedValue:ToDoListViewViewModel(userId: userId)
+            )
+        self.userId = userId
+    }
+    
+    func fetchData(userId: String) {
+        guard let userId = Auth.auth().currentUser?.uid else {
+            return
+        }
+//        self.chats = [
+//            AppChat(id: "1", topic: "Some Topic", model: .gpt3_5_turbo, lastMessageSent: FirestoreDate(), owner: "123"),
+//            AppChat(id: "2", topic: "Some other Topic", model: .gpt4, lastMessageSent: FirestoreDate(), owner: "123")
+//        ]
+//        self.loadingState = .resultFound
         
         if loadingState == .none {
             loadingState = .loading
-            db.collection("chats").whereField("owner", isEqualTo: user ?? "").addSnapshotListener{ [weak self] querySnapshot, err in
+            db.collection("Users")
+                .document(userId)
+                .collection("Chats")
+                .whereField("owner", isEqualTo: userId).addSnapshotListener{ [weak self] querySnapshot, err in
                 guard let self = self, let documents = querySnapshot?.documents, !documents.isEmpty else {
                     self?.loadingState = .noResults
                     return
@@ -42,8 +65,13 @@ class ChatListViewModel: ObservableObject {
         }
     }
     
-    func createChat(user: String?) async throws -> String {
-        let document = try await db.collection("chats").addDocument(data: ["lastMessageSent": Date(), "owner": user ?? ""])
+    func createChat(userId: String) async throws -> String {
+        let document = try await
+        db.collection("Users")
+            .document(userId)
+            .collection("Chats")
+            .addDocument(data: ["lastMessageSent": Date(), "owner": userId])
+
         return document.documentID
     }
     
@@ -64,7 +92,7 @@ enum ChatListState {
 }
 
 struct AppChat: Codable, Identifiable {
-    var id: String?
+    @DocumentID var id: String?
     let topic: String?
     var model: ChatModel?
     let lastMessageSent: FirestoreDate
