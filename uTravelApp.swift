@@ -20,7 +20,7 @@ struct uTravelApp: App {
     
     var body: some Scene {
         WindowGroup{
-                MainView()
+            MainView(userId: viewModel.currentUserId)
         }
     }
 }
